@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+  .center {
+    @apply flex justify-center items-center;
+  }
+
+  .layout_container {
+    @apply max-w-[1586px] mx-auto px-[10px] sm:px-[20px] md:px-[80px];
+  }
+}
+
+.gridResponsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 330px));
+}
+
+.slick-dots {
+  display: none !important;
+}
+
+.st0 {
+  fill: #a6a6a6;
+}
+.st1 {
+  stroke: #ffffff;
+  stroke-width: 0.2;
+  stroke-miterlimit: 10;
+}
+.st1,
+.st2 {
+  fill: #fff;
+}
+.st3 {
+  fill: url(#SVGID_1_);
+}
+.st4 {
+  fill: url(#SVGID_2_);
+}
+.st5 {
+  fill: url(#SVGID_3_);
+}
+.st6 {
+  fill: url(#SVGID_4_);
+}
+.st7,
+.st8,
+.st9 {
+  opacity: 0.2;
+  enable-background: new;
+}
+.st8,
+.st9 {
+  opacity: 0.12;
+}
+.st9 {
+  opacity: 0.25;
+  fill: #fff;
+}
+
+/* .range-slider__thumb {
+  background-color: #3bb77e;
+  border: 1px solid #ccc;
+} */
+
+/* RangeSlider.css */
+.range-slider__track {
+  background: linear-gradient(to right, #ccc, #3bb77e, #ccc);
+}
+
+.range-slider__thumb {
+  background-color: #3bb77e !important;
+  border: 1px solid #ccc;
+}
+.range-slider__range {
+  background-color: #3bb77e !important;
+  border: 1px solid #ccc;
+}
+
+.range-slider__thumb:hover {
+  background-color: #3bb77e;
+}
+
+.range-slider__thumb:active {
+  background-color: #3bb77e;
+}
+
+.PhoneInputInput {
+  outline: none;
+  width: 100%;
+  height: 100%;
+}
+@tailwind utilities;
+
+
+.smoothBar::-webkit-scrollbar {
+  width: 5px;
+  opacity: 1;
+}
+
+.smoothBar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+.smoothBar:hover::-webkit-scrollbar-thumb {
+  background-color: #c2c2c2;
+}
