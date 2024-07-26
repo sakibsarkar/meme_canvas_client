@@ -1,5 +1,5 @@
 import { api } from "@/redux/api/appSlice";
-import { TCustomer } from "@/types/customer";
+import { TUser } from "@/types/user";
 
 const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,7 +20,15 @@ const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
-    getAuthor: builder.query<{ data: TCustomer }, string>({
+    resetPassword: builder.mutation({
+      query: (payload: { oldPassword: string; password: string }) => ({
+        url: "/auth/reset-password",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["user"],
+    }),
+    getAuthor: builder.query<{ data: TUser }, string>({
       query: (token) => {
         return {
           url: `/auth/auth-state`,
@@ -38,4 +46,5 @@ export const {
   useRegisterCustomerMutation,
   useLoginUserMutation,
   useGetAuthorQuery,
+  useResetPasswordMutation,
 } = userApi;

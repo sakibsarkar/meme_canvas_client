@@ -1,35 +1,39 @@
-import { TCustomer } from "@/types/customer";
+import { TUser } from "@/types/user";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type TAuthState = {
-  user: TCustomer | null;
+  user: TUser | null;
   isLoading: boolean;
+  token: string | null;
 };
-// Define initial state
 const initialState: TAuthState = {
   user: null,
   isLoading: true,
+  token: null,
 };
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<{ user: TCustomer | null }>) {
+    setUser(state, action: PayloadAction<{ user: TUser | null }>) {
       state.user = action.payload.user;
-      console.log(action.payload.user);
 
       state.isLoading = false;
     },
     logout(state, action) {
-      return { user: null, isLoading: false };
+      return { user: null, isLoading: false, token: null };
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action?.payload || false;
     },
-
-    // Add more reducers as needed
+    setToken(state, action: PayloadAction<string | null>) {
+      state.token = action.payload;
+    },
+    setState(state, action: PayloadAction<TAuthState>) {
+      return action.payload;
+    },
   },
 });
 
-export const { setUser, logout,setLoading } = userSlice.actions;
+export const { setUser, logout, setLoading, setToken,setState } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,20 +3,34 @@ import {
   FLUSH,
   PAUSE,
   PERSIST,
+  persistReducer,
   persistStore,
   PURGE,
   REGISTER,
   REHYDRATE,
 } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { api } from "../api/appSlice";
 import authReducer from "../features/auth/auth.slice";
+import projectReducer from "../features/project/project.slice";
+import shapeReducer from "../features/project/shapes.slice";
 
 // Persist configuration
+const persistConfig = {
+  key: "root",
+  storage,
+};
+const persistAuthReducer = persistReducer(
+  { ...persistConfig, key: "auth" },
+  authReducer
+);
 
 // Configure store
 const store = configureStore({
   reducer: {
-    auth: authReducer,
+    auth: persistAuthReducer,
+    shapes: shapeReducer,
+    project: projectReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -6,18 +6,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AccountPanel } from "../client/AccountPanel";
 import { LeftSidebar } from "../client/LeftSidebar";
+import { Button } from "../ui/button";
+import CreateProject from "./CreatePorject";
 
 const Header = () => {
   const location = usePathname();
 
-  const { user, isLoading } = useAppSelector((state) => state.auth);
+  const { user, isLoading, token } = useAppSelector((state) => state.auth);
 
   return (
     <header className="py-5 lg:py-7 border-b sticky top-0 z-50 bg-white ">
-      <div className="layout_container  flex justify-between gap-4 items-center">
+      <div className="layout_container flex justify-between gap-4 items-center">
         <div className="flex items-center gap-2">
           <LeftSidebar />
-          <span className="text-lg font-bold">Tienda</span>
+          <Link href={"/"} className="text-lg font-bold">
+            Tienda{" "}
+          </Link>
         </div>
         <nav className="hidden lg:flex gap-5 items-center">
           {navLinks.map((nav) => (
@@ -32,22 +36,20 @@ const Header = () => {
             </Link>
           ))}
         </nav>
-        {isLoading ? (
-          ""
-        ) : (
-          <div className="flex gap-3 items-center">
-            {user ? (
-              <AccountPanel />
-            ) : (
-              <Link
-                href="/login"
-                className="text-slate-700 hover:text-green-500"
-              >
-                Login
-              </Link>
-            )}
-          </div>
-        )}
+
+        <div className="flex gap-3 items-center justify-start ">
+          <CreateProject>
+            <Button id="create">Create Project</Button>
+          </CreateProject>
+
+          {user ? (
+            <AccountPanel />
+          ) : (
+            <Link href="/login" className="text-slate-700 hover:text-green-500">
+              Login
+            </Link>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -10,7 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/redux/features/auth/auth.slice";
+import { useAppSelector } from "@/redux/hook";
 import Cookies from "js-cookie";
+import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 
@@ -20,11 +22,22 @@ export function AccountPanel() {
     dispatch(logout(undefined));
     Cookies.remove("refreshToken");
   };
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <User className="cursor-pointer text-slate-700 hover:text-green-500" />
+        <button className="avatarGradient center p-[5px] rounded-full cursor-pointer">
+          <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
+            <Image
+              alt="profile"
+              src={user?.image || "/images/avatar.jpg"}
+              width={80}
+              height={80}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 bg-white">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -37,8 +50,7 @@ export function AccountPanel() {
             </DropdownMenuItem>
           </Link>
 
-          <Link href="/settings">
-            {" "}
+          <Link href="/profile/settings">
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
 

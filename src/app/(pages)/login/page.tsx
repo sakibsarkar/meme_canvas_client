@@ -1,7 +1,7 @@
 "use client";
 
 import { useLoginUserMutation } from "@/redux/features/auth/auth.api";
-import { setUser } from "@/redux/features/auth/auth.slice";
+import { setToken, setUser } from "@/redux/features/auth/auth.slice";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Cookies from "js-cookie";
 import { LogIn } from "lucide-react";
@@ -29,10 +29,28 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const redirect = Cookies.get("redirect");
+
   const handleLogin = async (values: TFormValues) => {
     const toastId = toast.loading("Please wait...");
     try {
-      const { data } = await login(values);
+      const { data, error: err } = await login(values);
+      const error: any = err;
+      if (error) {
+        if (error.status === 401) {
+          return toast.error("password didn;t matched", {
+            description: "try to remember your password and try again",
+          });
+        }
+        if (error.status === 404) {
+          return toast.error("Invalid email address", {
+            description: "Enter a valid email adress.",
+          });
+        }
+
+        return toast.error(error.data?.message || "Unknown error occureds");
+      }
+
       if (!data) {
         return toast.error("Something went wrong");
       }
@@ -44,16 +62,15 @@ const Login = () => {
         user: data.data,
       };
       dispatch(setUser(authData));
-      Cookies.set("refreshToken", data.refreshToken);
-      Cookies.set("accessToken", data.accessToken);
+      Cookies.set("refreshToken", data.refreshToken, { expires: 30 });
+      dispatch(setToken(data.accessToken || ""));
 
       toast.success("Successfully logged in", {
         description: "Welcome back!",
       });
 
-      const redirect = Cookies.get("redirect");
-      router.push(redirect || "/profile");
-      Cookies.remove("redirect");
+      redirect ? Cookies.remove("redirect") : "";
+      router.replace(redirect || "/profile");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -127,8 +144,20 @@ const Login = () => {
           <div className="mt-6 text-start">
             <p className="text-gray-700">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-primaryMat">
+              <Link
+                href="/register"
+                className="text-primaryMat hover:underline"
+              >
                 Create Account
+              </Link>
+            </p>
+            <p className="text-gray-700">
+              Dont remeber our password?{" "}
+              <Link
+                href="/forgot-password"
+                className="text-primaryMat hover:underline"
+              >
+                forgot password
               </Link>
             </p>
           </div>

@@ -2,24 +2,30 @@
 
 import { useGetAuthorQuery } from "@/redux/features/auth/auth.api";
 import { setLoading, setUser } from "@/redux/features/auth/auth.slice";
-import Cookies from "js-cookie";
-import React from "react";
+import { useAppSelector } from "@/redux/hook";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const token = Cookies.get("accessToken");
-
-  const { data, isSuccess, isError, isLoading } = useGetAuthorQuery(
-    token || ""
-  );
   const dispatch = useDispatch();
+  const { token } = useAppSelector((state) => state.auth);
 
-  if (isSuccess) {
-    dispatch(setUser({ user: data.data }));
-  }
+  const { data, isSuccess, isError, isFetching } = useGetAuthorQuery(
+    token as string,
+    {
+      skip: !token,
+    }
+  );
 
-  if (isError) {
-    dispatch(setLoading(false));
-  }
+  useEffect(() => {
+    if (isFetching) {
+      dispatch(setLoading(isFetching));
+    }
+    if (isSuccess) {
+      dispatch(setUser({ user: data?.data }));
+      dispatch(setLoading(false));
+    }
+  
+  }, [isFetching, isSuccess, dispatch, data?.data]);
 
   return <>{children}</>;
 };
